@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBuddy - {% block title %}{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-red: #D32F2F;
+            --secondary-red: #B71C1C;
+            --pure-white: #FFFFFF;
+            --off-white: #F5F5F5;
+            --dark-gray: #333333;
+        }
+        .bg-primary-red { background-color: var(--primary-red); }
+        .text-primary-red { color: var(--primary-red); }
+        .border-primary-red { border-color: var(--primary-red); }
+        .hover-bg-secondary-red:hover { background-color: var(--secondary-red); }
+        
+        body {
+            background-color: var(--off-white);
+            color: var(--dark-gray);
+            font-family: 'Inter', sans-serif;
+        }
+        .card {
+            background-color: var(--pure-white);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .btn-primary {
+            background-color: var(--primary-red);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn-primary:hover {
+            background-color: var(--secondary-red);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <nav class="bg-primary-red text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <a href="/" class="text-2xl font-bold flex items-center">
+                        <i class="fas fa-hotel mr-2"></i> HBuddy
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.__class__.__name__ == 'Admin' %}
+                            <a href="{{ url_for('admin_dashboard') }}" class="hover:text-gray-200">Admin Dash</a>
+                        {% else %}
+                            <a href="{{ url_for('dashboard') }}" class="hover:text-gray-200">Dashboard</a>
+                            <a href="{{ url_for('menu_management') }}" class="hover:text-gray-200">Menu</a>
+                            <a href="{{ url_for('table_management') }}" class="hover:text-gray-200">Tables</a>
+                        {% endif %}
+                        <a href="{{ url_for('logout') }}" class="bg-white text-primary-red px-3 py-1 rounded font-semibold hover:bg-gray-100">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="hover:text-gray-200">Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow container mx-auto px-4 py-8">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <span class="block sm:inline">{{ message }}</span>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-white border-t py-4 text-center text-gray-500 text-sm">
+        &copy; 2026 HBuddy - Smart Hotel Management Platform
+    </footer>
+</body>
+</html>

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-8">
+    <div>
+        <h1 class="text-3xl font-bold text-primary-indigo">Business Dashboard</h1>
+        <p class="text-gray-500 mt-1">Today at a glance</p>
+    </div>
+    <div class="flex gap-3">
+        <a href="{{ url_for('business.table_management') }}" class="btn-primary">Open Table Map</a>
+        <a href="{{ url_for('business.order_history') }}" class="px-4 py-3 rounded-lg border font-semibold">View Orders</a>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
+    <div class="card p-6">
+        <p class="text-sm text-gray-500">Orders Today</p>
+        <h3 class="text-3xl font-bold mt-2">{{ orders_count }}</h3>
+    </div>
+    <div class="card p-6">
+        <p class="text-sm text-gray-500">Revenue</p>
+        <h3 class="text-3xl font-bold mt-2">₹{{ "%.2f"|format(total_revenue or 0) }}</h3>
+    </div>
+    <div class="card p-6">
+        <p class="text-sm text-gray-500">Active Tables</p>
+        <h3 class="text-3xl font-bold mt-2">{{ active_tables }}</h3>
+    </div>
+    <div class="card p-6">
+        <p class="text-sm text-gray-500">Completed Orders</p>
+        <h3 class="text-3xl font-bold mt-2">{{ completed_orders }}</h3>
+    </div>
+</div>
+
+<div class="card p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold">Recent Orders</h2>
+        <a href="{{ url_for('business.order_history') }}" class="text-primary-indigo font-semibold">See all</a>
+    </div>
+    {% if recent_orders %}
+    <div class="overflow-x-auto">
+        <table class="w-full text-left">
+            <thead>
+                <tr class="text-sm text-gray-500 border-b">
+                    <th class="py-3">Table</th>
+                    <th class="py-3">Amount</th>
+                    <th class="py-3">Status</th>
+                    <th class="py-3">Payment</th>
+                    <th class="py-3">Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in recent_orders %}
+                <tr class="border-b last:border-0">
+                    <td class="py-3 font-medium">{{ order.table.name }}</td>
+                    <td class="py-3">₹{{ "%.2f"|format(order.final_amount) }}</td>
+                    <td class="py-3">{{ order.status }}</td>
+                    <td class="py-3">{{ order.payment_status }}</td>
+                    <td class="py-3 text-sm text-gray-500">{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-gray-500">No orders yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

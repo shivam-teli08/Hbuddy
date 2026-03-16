@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Bill{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-3xl font-bold text-primary-indigo">Generated Bill</h1>
+            <p class="text-gray-500 mt-1">Bill No: {{ bill_number }}</p>
+        </div>
+        <div class="flex gap-3">
+            <a href="{{ url_for('business.download_bill_pdf', order_id=order.id) }}" class="btn-primary">Download PDF</a>
+            <a href="{{ url_for('business.order_history') }}" class="px-4 py-3 rounded-lg border font-semibold">Order History</a>
+        </div>
+    </div>
+
+    <div class="card p-8">
+        <div class="flex justify-between items-start border-b pb-6">
+            <div>
+                <h2 class="text-2xl font-bold">{{ order.table.business.name }}</h2>
+                <p class="text-gray-500">{{ order.table.business.address or 'Address not set' }}</p>
+                <p class="text-gray-500">{{ order.table.business.contact or 'Contact not set' }}</p>
+                <p class="text-gray-500">GST: {{ order.table.business.gst_number or 'Not set' }}</p>
+            </div>
+            <div class="text-right text-sm">
+                <p><strong>Date:</strong> {{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                <p><strong>Table:</strong> {{ order.table.name }}</p>
+                <p><strong>Status:</strong> {{ order.status }}</p>
+                <p><strong>Payment:</strong> {{ order.payment_status }}</p>
+            </div>
+        </div>
+
+        <div class="mt-6 overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="border-b text-sm text-gray-500">
+                        <th class="py-3">Item</th>
+                        <th class="py-3">Qty</th>
+                        <th class="py-3">Rate</th>
+                        <th class="py-3 text-right">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.items %}
+                    <tr class="border-b">
+                        <td class="py-3">{{ item.menu_item.name }}</td>
+                        <td class="py-3">{{ item.quantity }}</td>
+                        <td class="py-3">₹{{ "%.2f"|format(item.price_at_order) }}</td>
+                        <td class="py-3 text-right">₹{{ "%.2f"|format(item.price_at_order * item.quantity) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-8 ml-auto max-w-sm space-y-3 text-sm">
+            <div class="flex justify-between">
+                <span>Subtotal</span>
+                <span>₹{{ "%.2f"|format(order.total_amount) }}</span>
+            </div>
+            <div class="flex justify-between">
+                <span>GST (5%)</span>
+                <span>₹{{ "%.2f"|format(order.gst_amount) }}</span>
+            </div>
+            <div class="flex justify-between text-lg font-bold border-t pt-3">
+                <span>Total</span>
+                <span>₹{{ "%.2f"|format(order.final_amount) }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

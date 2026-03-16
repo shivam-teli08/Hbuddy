@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Table Map{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-primary-indigo">Table Map Dashboard</h1>
+    <button onclick="document.getElementById('add-table-modal').classList.remove('hidden')" class="btn-primary">
+        Add Table
+    </button>
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 mb-12">
+    {% for table in tables %}
+    <div class="space-y-3">
+        <a href="{{ url_for('business.create_order', table_id=table.id) }}"
+           class="block p-6 rounded-xl shadow-lg border-2 transition duration-300 transform hover:scale-105
+           {% if table.status == 'Available' %} bg-green-50 border-green-500 text-green-700 hover:bg-green-100
+           {% elif table.status == 'Occupied' %} bg-red-50 border-red-500 text-red-700 hover:bg-red-100
+           {% else %} bg-yellow-50 border-yellow-500 text-yellow-700 hover:bg-yellow-100 {% endif %}">
+            <div class="flex flex-col items-center justify-center">
+                <i class="fas fa-chair text-4xl mb-4"></i>
+                <span class="text-2xl font-black">{{ table.name }}</span>
+                <span class="text-xs font-bold uppercase mt-2 tracking-widest opacity-75">{{ table.status }}</span>
+                <span class="text-xs mt-1 font-semibold">{{ table.capacity }} Seats</span>
+            </div>
+        </a>
+        <form method="POST" action="{{ url_for('business.table_management') }}" class="flex gap-2">
+            <input type="hidden" name="action" value="status">
+            <input type="hidden" name="table_id" value="{{ table.id }}">
+            <select name="status" class="shadow border rounded-lg w-full py-2 px-3 text-sm">
+                <option value="Available" {% if table.status == 'Available' %}selected{% endif %}>Available</option>
+                <option value="Occupied" {% if table.status == 'Occupied' %}selected{% endif %}>Occupied</option>
+                <option value="Reserved" {% if table.status == 'Reserved' %}selected{% endif %}>Reserved</option>
+            </select>
+            <button type="submit" class="px-3 py-2 rounded-lg border text-sm font-semibold">Save</button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+
+<div id="add-table-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md border-t-4 border-primary-indigo">
+        <h2 class="text-2xl font-bold text-primary-indigo mb-6">Add New Table</h2>
+        <form method="POST">
+            <input type="hidden" name="action" value="add">
+            <div class="mb-4">
+                <label class="block text-sm font-bold mb-2">Table Name/Number</label>
+                <input type="text" name="name" required class="shadow border rounded-lg w-full py-2 px-3">
+            </div>
+            <div class="mb-6">
+                <label class="block text-sm font-bold mb-2">Capacity</label>
+                <input type="number" name="capacity" required value="4" class="shadow border rounded-lg w-full py-2 px-3">
+            </div>
+            <div class="flex justify-end space-x-4">
+                <button type="button" onclick="document.getElementById('add-table-modal').classList.add('hidden')">Cancel</button>
+                <button type="submit" class="btn-primary">Add Table</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

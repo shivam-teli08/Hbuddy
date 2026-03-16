@@ -1,0 +1,269 @@
+HBuddy — Smart Hotel Management Platform
+
+(Full Prompt / Product Description)
+
+Product Name
+
+HBuddy
+
+Product Vision
+
+HBuddy is a simple, cost-effective hotel and restaurant management platform designed for small and medium businesses. The goal is to help hotels, cafés, and restaurants manage their daily operations with minimal setup and maximum efficiency.
+
+The system focuses on one-time setup and simple daily usage, allowing staff to handle orders, manage tables, and generate bills quickly.
+
+HBuddy reduces manual work, confusion, and delays in service while giving business owners a structured digital system.
+
+Core Idea
+
+HBuddy works in two main roles
+
+1️⃣ Admin (Platform Owner)
+
+The admin manages businesses that use the platform.
+
+Admin can:
+
+Register new businesses (restaurant, hotel, café, etc.)
+
+Create login credentials for the business
+
+Manage subscription or access
+
+View registered businesses
+
+2️⃣ Business Owner / Staff (Hotel Side)
+
+After a business is registered, the hotel owner receives login credentials.
+
+When they log in for the first time, they complete a one-time configuration setup.
+
+One-Time Setup Configuration
+
+The hotel owner will configure the following:
+
+Business Profile
+
+Hotel / Restaurant Name
+
+Address
+
+Contact number
+
+GST number
+
+Business type (Restaurant / Hotel / Cafe)
+
+Menu Management
+
+Owner adds menu items:
+
+Each item contains:
+
+Item Name
+
+Category (Starter, Main Course, Beverage etc.)
+
+Price
+
+Availability status
+
+Optional image
+
+Example:
+
+Starter
+• Paneer Tikka — ₹220
+• Veg Manchurian — ₹180
+
+Beverages
+• Cold Coffee — ₹120
+• Lime Soda — ₹80
+
+Restaurant Layout Setup
+
+Owner creates the table layout of their restaurant.
+
+Fields:
+
+Number of tables
+
+Table names or numbers (T1, T2, T3…)
+
+Table capacity
+
+Optional map layout (visual arrangement)
+
+Example:
+
+Table 1 → 4 seats
+Table 2 → 2 seats
+Table 3 → 6 seats
+
+This creates a visual table map used by staff.
+
+Business Timing
+
+Owner sets:
+
+Opening time
+
+Closing time
+
+Working days
+
+Daily Operation Flow (Staff Use)
+
+When a customer arrives:
+
+Step 1 — Check Table Map
+
+Staff opens the table map dashboard.
+
+Tables are shown in different colors:
+
+Green → Available
+Red → Occupied
+Yellow → Reserved
+
+Staff selects an available table.
+
+Step 2 — Create Order
+
+Staff selects items from the menu.
+
+Features:
+
+Quantity adjustment
+
+Category filtering
+
+Quick search
+
+Example:
+
+Table 3
+• Paneer Tikka ×2
+• Butter Naan ×4
+• Dal Makhani ×1
+
+Step 3 — Generate Bill
+
+System automatically calculates:
+
+Item total
+
+GST
+
+Final bill amount
+
+Staff can:
+
+• Print bill
+• Show digital bill
+• Mark payment as completed
+
+Step 4 — Table Reset
+
+Once payment is done:
+
+Table status changes back to Available.
+
+Dashboard Features
+
+Hotel dashboard shows:
+
+Today’s Overview
+
+Total orders today
+
+Total revenue
+
+Active tables
+
+Completed orders
+
+Order History
+
+View:
+
+All previous bills
+
+Date filter
+
+Search orders
+
+Menu Editor
+
+Owner can:
+
+Add items
+
+Edit price
+
+Disable items temporarily
+
+UI / UX Design Direction
+
+Design should be clean, modern, and simple for non-technical users.
+
+Restaurant staff should understand it within 30 seconds.
+
+Recommended Color Scheme
+Primary Color
+
+Deep Indigo
+#4F46E5
+
+Secondary Color
+
+Soft Purple
+#8B5CF6
+
+Background
+
+Light Gray
+#F9FAFB
+
+Success (Available Table)
+
+Green
+#22C55E
+
+Busy Table
+
+Red
+#EF4444
+
+Reserved Table
+
+Yellow
+#F59E0B
+
+Text
+
+Dark Gray
+#1F2937
+
+UI Components
+Table Map
+
+Cards showing tables
+
+Example
+
+[T1] 🟢
+[T2] 🔴
+[T3] 🟡
+
+Click → open order panel
+
+Menu Panel
+
+Grid or list layout
+
+Example
+
+Paneer Tikka
+₹220
+[ + Add ]

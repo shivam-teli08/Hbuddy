@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Table Map{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-primary-red">Table Map Dashboard</h1>
+    <button onclick="document.getElementById('add-table-modal').classList.remove('hidden')" class="btn-primary flex items-center">
+        <i class="fas fa-plus mr-2"></i> Add Table
+    </button>
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 mb-12">
+    {% for table in tables %}
+    <div class="relative group">
+        <a href="{{ url_for('create_order', table_id=table.id) }}" 
+           class="flex flex-col items-center justify-center p-6 rounded-xl shadow-lg border-2 transition duration-300 transform hover:scale-105
+           {% if table.status == 'Available' %} bg-green-50 border-green-500 text-green-700 hover:bg-green-100
+           {% elif table.status == 'Occupied' %} bg-red-50 border-red-500 text-red-700 hover:bg-red-100
+           {% else %} bg-yellow-50 border-yellow-500 text-yellow-700 hover:bg-yellow-100 {% endif %}">
+            
+            <i class="fas fa-chair text-4xl mb-4"></i>
+            <span class="text-2xl font-black">{{ table.name }}</span>
+            <span class="text-xs font-bold uppercase mt-2 tracking-widest opacity-75">{{ table.status }}</span>
+            <span class="text-xs mt-1 font-semibold">{{ table.capacity }} Seats</span>
+        </a>
+        
+        {% if table.status == 'Occupied' %}
+        <div class="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-md animate-pulse">
+            BUSY
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+{% if not tables %}
+<div class="text-center py-12 bg-white rounded-lg shadow-sm border border-dashed border-gray-300">
+    <i class="fas fa-chair text-gray-300 text-5xl mb-4"></i>
+    <p class="text-gray-500">No tables set up yet. Click the button above to add tables.</p>
+</div>
+{% endif %}
+
+<!-- Add Table Modal -->
+<div id="add-table-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md border-t-4 border-primary-red">
+        <h2 class="text-2xl font-bold text-primary-red mb-6">Add New Table</h2>
+        <form method="POST">
+            <div class="mb-4">
+                <label for="table_name" class="block text-gray-700 text-sm font-bold mb-2">Table Name/Number</label>
+                <input type="text" name="name" id="table_name" required placeholder="e.g. T1, T2"
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-gray-300 focus:border-primary-red">
+            </div>
+            <div class="mb-6">
+                <label for="capacity" class="block text-gray-700 text-sm font-bold mb-2">Capacity (Seats)</label>
+                <input type="number" name="capacity" id="capacity" required value="4"
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-gray-300 focus:border-primary-red">
+            </div>
+            <div class="flex justify-end space-x-4">
+                <button type="button" onclick="document.getElementById('add-table-modal').classList.add('hidden')" class="px-4 py-2 text-gray-500 font-semibold hover:text-gray-700">Cancel</button>
+                <button type="submit" class="btn-primary">Add Table</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-primary-red mt-12">
+    <h4 class="font-bold text-gray-800 mb-4 uppercase text-sm tracking-wider">Status Legend</h4>
+    <div class="flex space-x-8">
+        <div class="flex items-center"><span class="w-4 h-4 bg-green-500 rounded-full mr-2"></span> <span class="text-sm font-semibold">Available</span></div>
+        <div class="flex items-center"><span class="w-4 h-4 bg-red-500 rounded-full mr-2"></span> <span class="text-sm font-semibold">Occupied</span></div>
+        <div class="flex items-center"><span class="w-4 h-4 bg-yellow-500 rounded-full mr-2"></span> <span class="text-sm font-semibold">Reserved</span></div>
+    </div>
+</div>
+{% endblock %}

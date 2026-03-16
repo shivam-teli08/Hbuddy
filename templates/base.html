@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBuddy - {% block title %}{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-indigo: #C62828;
+            --secondary-purple: #E53935;
+            --pure-white: #FFFFFF;
+            --off-white: #FFF7F7;
+            --dark-gray: #1F2937;
+        }
+        .bg-primary-indigo { background-color: var(--primary-indigo); }
+        .text-primary-indigo { color: var(--primary-indigo); }
+        .border-primary-indigo { border-color: var(--primary-indigo); }
+        body {
+            background: linear-gradient(180deg, #FFE9E9 0%, var(--off-white) 30%, #FFFFFF 100%);
+            color: var(--dark-gray);
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .card {
+            background-color: var(--pure-white);
+            border-radius: 16px;
+            box-shadow: 0 10px 24px rgba(198, 40, 40, 0.08);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-indigo), var(--secondary-purple));
+            color: white;
+            padding: 0.7rem 1rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn-primary:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <nav class="bg-primary-indigo text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <a href="{{ url_for('business.dashboard') if current_user.is_authenticated and current_user.__class__.__name__ == 'BusinessUser' else url_for('auth.login') }}" class="text-2xl font-bold flex items-center">
+                        <i class="fas fa-hotel mr-2"></i> HBuddy
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4 text-sm font-medium">
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.__class__.__name__ == 'Admin' %}
+                            <a href="{{ url_for('admin.dashboard') }}" class="hover:text-gray-200">Admin Dashboard</a>
+                            <a href="{{ url_for('admin.register_business_view') }}" class="hover:text-gray-200">Register Business</a>
+                        {% else %}
+                            <a href="{{ url_for('business.dashboard') }}" class="hover:text-gray-200">Dashboard</a>
+                            <a href="{{ url_for('business.menu_management') }}" class="hover:text-gray-200">Menu</a>
+                            <a href="{{ url_for('business.table_management') }}" class="hover:text-gray-200">Tables</a>
+                            <a href="{{ url_for('business.order_history') }}" class="hover:text-gray-200">Orders</a>
+                        {% endif %}
+                        <a href="{{ url_for('auth.logout') }}" class="bg-white text-primary-indigo px-3 py-1 rounded-lg font-semibold hover:bg-gray-100">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('auth.login') }}" class="hover:text-gray-200">Business Login</a>
+                        <a href="{{ url_for('auth.admin_login') }}" class="hover:text-gray-200">Admin Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow container mx-auto px-4 py-8">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl mb-4" role="alert">
+                <span class="block sm:inline">{{ message }}</span>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-white border-t py-4 text-center text-gray-500 text-sm">
+        &copy; 2026 HBuddy - Smart Hotel Management Platform
+    </footer>
+</body>
+</html>

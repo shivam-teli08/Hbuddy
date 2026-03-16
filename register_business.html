@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Register Business{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md mt-12 border-t-4 border-primary-red">
+    <div class="mb-8">
+        <h2 class="text-3xl font-bold text-primary-red">Register New Business</h2>
+        <p class="text-gray-500 mt-2">Fill in the details to create a new business and login credentials</p>
+    </div>
+    
+    <form method="POST" action="{{ url_for('register_business') }}">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="mb-4">
+                <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Business Name</label>
+                <input type="text" name="name" id="name" required placeholder="e.g. Grand Hotel"
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-gray-300 focus:border-primary-red">
+            </div>
+            
+            <div class="mb-4">
+                <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Login Username</label>
+                <input type="text" name="username" id="username" required placeholder="e.g. grandhotel_admin"
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-gray-300 focus:border-primary-red">
+            </div>
+            
+            <div class="mb-6">
+                <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Login Password</label>
+                <input type="password" name="password" id="password" required placeholder="Set a strong password"
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-gray-300 focus:border-primary-red">
+            </div>
+            
+            <div class="mb-6 flex items-end">
+                <button type="submit" class="w-full bg-primary-red hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-200">
+                    Register Business
+                </button>
+            </div>
+        </div>
+    </form>
+    
+    <div class="mt-6 text-center text-sm border-t pt-4">
+        <a href="{{ url_for('admin_dashboard') }}" class="text-primary-red hover:text-red-700 font-semibold">
+            <i class="fas fa-arrow-left mr-1"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}

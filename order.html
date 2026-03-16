@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}Create Order - {{ table.name }}{% endblock %}
+
+{% block content %}
+<div class="flex flex-col lg:flex-row gap-8">
+    <!-- Menu Selection (Left) -->
+    <div class="lg:w-2/3">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-primary-red">Menu Selection - {{ table.name }}</h1>
+            <a href="{{ url_for('table_management') }}" class="text-gray-500 hover:text-primary-red font-semibold">
+                <i class="fas fa-arrow-left mr-1"></i> Back to Tables
+            </a>
+        </div>
+        
+        <div class="space-y-8">
+            {% for category in categories %}
+            <div>
+                <h3 class="text-xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-primary-red inline-block">{{ category.name }}</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {% for item in category.items %}
+                    <div class="card p-4 flex justify-between items-center hover:shadow-md transition">
+                        <div>
+                            <p class="font-bold text-gray-800">{{ item.name }}</p>
+                            <p class="text-sm font-semibold text-primary-red">₹{{ "%.2f"|format(item.price) }}</p>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <button type="button" onclick="decrement('item-{{ item.id }}')" class="w-8 h-8 rounded-full bg-gray-100 text-gray-600 hover:bg-primary-red hover:text-white transition flex items-center justify-center">
+                                <i class="fas fa-minus text-xs"></i>
+                            </button>
+                            <input type="number" name="qty-{{ item.id }}" id="item-{{ item.id }}" value="0" min="0" 
+                                   class="w-12 text-center font-bold bg-transparent border-none focus:ring-0" readonly
+                                   data-id="{{ item.id }}" data-name="{{ item.name }}" data-price="{{ item.price }}">
+                            <button type="button" onclick="increment('item-{{ item.id }}')" class="w-8 h-8 rounded-full bg-gray-100 text-gray-600 hover:bg-primary-red hover:text-white transition flex items-center justify-center">
+                                <i class="fas fa-plus text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Order Summary (Right) -->
+    <div class="lg:w-1/3">
+        <div class="sticky top-8 bg-white rounded-lg shadow-xl border-t-4 border-primary-red p-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center border-b pb-4">
+                <i class="fas fa-receipt mr-2 text-primary-red"></i> Order Summary
+            </h3>
+            
+            <form id="order-form" method="POST">
+                <div id="order-items-list" class="space-y-4 mb-6 max-h-96 overflow-y-auto">
+                    <p class="text-gray-400 italic text-center py-8">No items selected yet</p>
+                </div>
+                
+                <div class="border-t pt-4 space-y-2 mb-6">
+                    <div class="flex justify-between text-gray-600">
+                        <span>Subtotal</span>
+                        <span id="subtotal">₹0.00</span>
+                    </div>
+                    <div class="flex justify-between text-gray-600">
+                        <span>GST (5%)</span>
+                        <span id="gst">₹0.00</span>
+                    </div>
+                    <div class="flex justify-between text-xl font-bold text-gray-900 pt-2 border-t">
+                        <span>Total</span>
+                        <span id="total">₹0.00</span>
+                    </div>
+                </div>
+                
+                <div id="hidden-inputs"></div>
+                
+                <button type="submit" id="submit-btn" disabled 
+                        class="w-full bg-gray-300 text-white font-bold py-4 rounded-lg cursor-not-allowed transition duration-200 uppercase tracking-widest">
+                    Place Order
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function increment(id) {
+    const input = document.getElementById(id);
+    input.value = parseInt(input.value) + 1;
+    updateSummary();
+}
+
+function decrement(id) {
+    const input = document.getElementById(id);
+    if (parseInt(input.value) > 0) {
+        input.value = parseInt(input.value) - 1;
+        updateSummary();
+    }
+}
+
+function updateSummary() {
+    const inputs = document.querySelectorAll('input[type="number"]');
+    const list = document.getElementById('order-items-list');
+    const hiddenInputs = document.getElementById('hidden-inputs');
+    const subtotalEl = document.getElementById('subtotal');
+    const gstEl = document.getElementById('gst');
+    const totalEl = document.getElementById('total');
+    const submitBtn = document.getElementById('submit-btn');
+    
+    let subtotal = 0;
+    let html = '';
+    let hiddenHtml = '';
+    let hasItems = false;
+    
+    inputs.forEach(input => {
+        const qty = parseInt(input.value);
+        if (qty > 0) {
+            hasItems = true;
+            const id = input.dataset.id;
+            const name = input.dataset.name;
+            const price = parseFloat(input.dataset.price);
+            const itemTotal = price * qty;
+            subtotal += itemTotal;
+            
+            html += `
+                <div class="flex justify-between items-center text-sm">
+                    <div class="flex-grow">
+                        <p class="font-bold text-gray-800">${name}</p>
+                        <p class="text-xs text-gray-500">${qty} x ₹${price.toFixed(2)}</p>
+                    </div>
+                    <span class="font-bold text-gray-800">₹${itemTotal.toFixed(2)}</span>
+                </div>
+            `;
+            
+            hiddenHtml += `
+                <input type="hidden" name="items" value="${id}">
+                <input type="hidden" name="quantities" value="${qty}">
+            `;
+        }
+    });
+    
+    if (!hasItems) {
+        list.innerHTML = '<p class="text-gray-400 italic text-center py-8">No items selected yet</p>';
+        submitBtn.disabled = true;
+        submitBtn.classList.remove('bg-primary-red', 'hover:bg-red-700');
+        submitBtn.classList.add('bg-gray-300', 'cursor-not-allowed');
+    } else {
+        list.innerHTML = html;
+        hiddenInputs.innerHTML = hiddenHtml;
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('bg-gray-300', 'cursor-not-allowed');
+        submitBtn.classList.add('bg-primary-red', 'hover:bg-red-700');
+    }
+    
+    const gst = subtotal * 0.05;
+    const total = subtotal + gst;
+    
+    subtotalEl.innerText = `₹${subtotal.toFixed(2)}`;
+    gstEl.innerText = `₹${gst.toFixed(2)}`;
+    totalEl.innerText = `₹${total.toFixed(2)}`;
+}
+</script>
+{% endblock %}

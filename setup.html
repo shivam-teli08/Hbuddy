@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}One-Time Setup{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md mt-12 border-t-4 border-primary-red">
+    <div class="mb-8">
+        <h2 class="text-3xl font-bold text-primary-red">One-Time Setup Configuration</h2>
+        <p class="text-gray-500 mt-2">Complete the setup to start using HBuddy for your business</p>
+    </div>
+    
+    <form method="POST" action="{{ url_for('setup') }}">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="mb-4">
+                <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Business Name</label>
+                <input type="text" name="name" id="name" value="{{ current_user.business.name }}" readonly
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-gray-300 focus:border-primary-red">
+            </div>
+            
+            <div class="mb-4">
+                <label for="business_type" class="block text-gray-700 text-sm font-bold mb-2">Business Type</label>
+                <select name="business_type" id="business_type" required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-gray-300 focus:border-primary-red">
+                    <option value="Restaurant">Restaurant</option>
+                    <option value="Hotel">Hotel</option>
+                    <option value="Cafe">Cafe</option>
+                </select>
+            </div>
+            
+            <div class="mb-4">
+                <label for="address" class="block text-gray-700 text-sm font-bold mb-2">Address</label>
+                <input type="text" name="address" id="address" required placeholder="Full business address"
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-gray-300 focus:border-primary-red">
+            </div>
+            
+            <div class="mb-4">
+                <label for="contact" class="block text-gray-700 text-sm font-bold mb-2">Contact Number</label>
+                <input type="text" name="contact" id="contact" required placeholder="e.g. +91 9876543210"
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-gray-300 focus:border-primary-red">
+            </div>
+            
+            <div class="mb-4">
+                <label for="gst_number" class="block text-gray-700 text-sm font-bold mb-2">GST Number</label>
+                <input type="text" name="gst_number" id="gst_number" required placeholder="e.g. 22AAAAA0000A1Z5"
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-gray-300 focus:border-primary-red">
+            </div>
+            
+            <div class="mb-4">
+                <label for="working_days" class="block text-gray-700 text-sm font-bold mb-2">Working Days</label>
+                <input type="text" name="working_days" id="working_days" required placeholder="e.g. Mon-Sat"
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-gray-300 focus:border-primary-red">
+            </div>
+            
+            <div class="mb-4">
+                <label for="opening_time" class="block text-gray-700 text-sm font-bold mb-2">Opening Time</label>
+                <input type="time" name="opening_time" id="opening_time" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-gray-300 focus:border-primary-red">
+            </div>
+            
+            <div class="mb-4">
+                <label for="closing_time" class="block text-gray-700 text-sm font-bold mb-2">Closing Time</label>
+                <input type="time" name="closing_time" id="closing_time" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-gray-300 focus:border-primary-red">
+            </div>
+        </div>
+        
+        <div class="mt-8">
+            <button type="submit" class="w-full bg-primary-red hover:bg-red-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline transition duration-200">
+                Complete Setup & Launch Dashboard
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
