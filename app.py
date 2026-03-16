@@ -1,10 +1,12 @@
 from src import create_app
-from init_db import db
+from src.services.bootstrap_service import initialize_database
+
 
 app = create_app()
 
 
 if __name__ == "__main__":
     with app.app_context():
-        db.create_all()
-    app.run(host="0.0.0.0", port=5000, debug=True)
+        initialize_database()
+        print("Database initialized successfully.")
+    app.run(debug=True)
